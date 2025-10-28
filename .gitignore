@@ -1,3 +1,6 @@
 # node modules 제외
 node_modules/
 **/node_modules/
+
+.env
+__http__/**
