@@ -1,5 +1,8 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import { assert } from 'superstruct';
+import { CreateProduct, PatchProduct } from '../structs/productStructs.js';
+import { CreateComment, PatchComment } from '../structs/commentStructs.js';
 
 const productRoute = express.Router();
 const productCommentRoute = express.Router();
@@ -51,6 +54,7 @@ productRoute
     res.status(200).send(productList);
   })
   .post(async (req, res) => {
+    assert(req.body, CreateProduct);
     const productNew = await prisma.product.create({
       data: req.body,
       include: {
@@ -75,6 +79,7 @@ productRoute
     res.status(200).send(productOne);
   })
   .patch(async (req, res) => {
+    assert(req.body, PatchProduct);
     const id = req.params.id;
     const productUpdate = await prisma.product.update({
       where: { id },
@@ -117,9 +122,10 @@ productCommentRoute
     const productCommentList = new Array(productComments.comments);
     res.status(200).send(productCommentList);
   })
-  .patch(async (req, res) => {
+  .post(async (req, res) => {
     // 1. comment DB에 데이터를 우선 생성
 
+    assert(req.body, CreateComment);
     const commentNew = await prisma.comment.create({
       data: req.body,
     });
@@ -160,11 +166,11 @@ productCommentRoute
     res.status(200).send(targetComment);
   })
   .patch(async (req, res) => {
+    assert(req.body, PatchComment);
     const commentId = req.params.commentId;
-    const data = req.body;
     const commentUpdate = await prisma.comment.update({
       where: { id: commentId },
-      data,
+      data: req.body,
     });
 
     res.status(201).send(commentUpdate);
