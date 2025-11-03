@@ -1,13 +1,14 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
 import { productRoute, productCommentRoute } from './routers/productRoute.js';
 import { articleRoute, articleCommentRoute } from './routers/articleRoute.js';
 import commentRoute from './routers/commentRoute.js';
+import cors from 'cors';
+import errorHandler from './lib/errorhandler.js';
 
 const app = express();
 const port = 3000;
-const prisma = new PrismaClient();
 
+app.use(cors());
 app.use(express.json());
 
 // route 작업
@@ -18,6 +19,8 @@ app.use('/articles', articleRoute);
 app.use('/articles', articleCommentRoute);
 
 app.use('/comments', commentRoute);
+
+app.use(errorHandler());
 
 app.listen(port, (req, res) => {
   console.log('start app!!!');

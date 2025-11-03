@@ -1,187 +1,33 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
-import { assert } from 'superstruct';
-import { CreateProduct, PatchProduct } from '../structs/productStructs.js';
-import { CreateComment, PatchComment } from '../structs/commentStructs.js';
+import asyncHandler from '../lib/asynchandler.js';
+import * as p from '../controllers/product_controllers.js';
+import * as pc from '../controllers/productComment_controllers.js';
 
 const productRoute = express.Router();
 const productCommentRoute = express.Router();
-const prisma = new PrismaClient();
 
-productRoute
-  .route('/')
-  .get(async (req, res) => {
-    const {
-      offset = 0,
-      limit = 10,
-      order = 'newest',
-      name = '',
-      description = '',
-    } = req.query;
+const product = productRoute.route('/');
+const product_id = productRoute.route('/:id');
 
-    let orderBy;
-    switch (order) {
-      case 'oldest':
-        orderBy = { createdAt: 'asc' };
-        break;
-      case 'newest':
-        orderBy = { createdAt: 'desc' };
-        break;
-      default:
-        orderBy = { createdAt: 'asc' };
-    }
+product.get(asyncHandler(p.productsList));
+product.post(asyncHandler(p.productNew));
 
-    const productList = await prisma.product.findMany({
-      where: {
-        name: {
-          contains: name,
-        },
-        description: {
-          contains: description,
-        },
-      },
-      skip: parseInt(offset),
-      take: parseInt(limit),
-      orderBy,
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        createdAt: true,
-      },
-    });
-
-    res.status(200).send(productList);
-  })
-  .post(async (req, res) => {
-    assert(req.body, CreateProduct);
-    const productNew = await prisma.product.create({
-      data: req.body,
-      include: {
-        comments: true,
-      },
-    });
-
-    res.status(201).send(productNew);
-  });
-
-productRoute
-  .route('/:id')
-  .get(async (req, res) => {
-    const id = req.params.id;
-    const productOne = await prisma.product.findUnique({
-      where: { id },
-      include: {
-        comments: true,
-      },
-    });
-
-    res.status(200).send(productOne);
-  })
-  .patch(async (req, res) => {
-    assert(req.body, PatchProduct);
-    const id = req.params.id;
-    const productUpdate = await prisma.product.update({
-      where: { id },
-      data: req.body,
-    });
-
-    res.status(200).send(productUpdate);
-  })
-  .delete(async (req, res) => {
-    const id = req.params.id;
-    await prisma.product.delete({
-      where: { id },
-    });
-
-    res.status(204).send({ message: `Product Delete ${id}` });
-  });
+product_id.get(asyncHandler(p.productOnly));
+product_id.patch(asyncHandler(p.productUpdate));
+product_id.delete(asyncHandler(p.productDelete));
 
 // ======= product에 연결 된 comment =======
-
 // Product와 comment가 별도의 모델로 구동되므로
 // 별도의 작업으로 제작 하였습니다
 
-productCommentRoute
-  .route('/:productId/comments')
-  .get(async (req, res) => {
-    const productId = req.params.productId;
-    const productComments = await prisma.product.findUnique({
-      where: { id: productId },
-      include: {
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-          },
-        },
-      },
-    });
+const productComment = productRoute.route('/:productId/comments');
+const productComment_id = productRoute.route('/:productId/comments/:commentId');
 
-    const productCommentList = new Array(productComments.comments);
-    res.status(200).send(productCommentList);
-  })
-  .post(async (req, res) => {
-    // 1. comment DB에 데이터를 우선 생성
+productComment.get(asyncHandler(pc.productCommentList));
+productComment.post(asyncHandler(pc.productCommentNew));
 
-    assert(req.body, CreateComment);
-    const commentNew = await prisma.comment.create({
-      data: req.body,
-    });
-
-    // 2. comment data를 해당하는 product에 연결
-    const productId = req.params.productId;
-    const commentId = commentNew.id;
-
-    const productCommentNew = await prisma.product.update({
-      where: { id: productId },
-      data: {
-        comments: {
-          connect: { id: commentId },
-        },
-      },
-      include: { comments: true },
-    });
-    res.status(201).send(productCommentNew);
-  });
-
-// product 페이지에서 특정 댓글에 접속하는 방식을 구현하고 싶었으나
-// 데이터를 불러오는데 한계가 있어서,
-// 일단 prisma.comment로 작업 하였습니다
-
-productCommentRoute
-  .route('/:productId/comments/:commentId')
-  .get(async (req, res) => {
-    const commentId = req.params.commentId;
-    const targetComment = await prisma.comment.findUnique({
-      where: { id: commentId },
-      select: {
-        id: true,
-        content: true,
-        createdAt: true,
-      },
-    });
-
-    res.status(200).send(targetComment);
-  })
-  .patch(async (req, res) => {
-    assert(req.body, PatchComment);
-    const commentId = req.params.commentId;
-    const commentUpdate = await prisma.comment.update({
-      where: { id: commentId },
-      data: req.body,
-    });
-
-    res.status(201).send(commentUpdate);
-  })
-  .delete(async (req, res) => {
-    const commentId = req.params.commentId;
-    await prisma.comment.delete({
-      where: { id: commentId },
-    });
-
-    res.status(204).send(commentId);
-  });
+productComment_id.get(asyncHandler(pc.productCommentOnly));
+productComment_id.patch(asyncHandler(pc.productCommentUpdate));
+productComment_id.delete(asyncHandler(pc.productCommentDelete));
 
 export { productRoute, productCommentRoute };
