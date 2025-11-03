@@ -1,7 +1,9 @@
 import express from 'express';
 import { productRoute, productCommentRoute } from './routers/productRoute.js';
 import { articleRoute, articleCommentRoute } from './routers/articleRoute.js';
-import commentRoute from './routers/commentRoute.js';
+import { commentRoute } from './routers/commentRoute.js';
+import { imgRouter } from './routers/imgRoute.js';
+
 import cors from 'cors';
 import errorHandler from './lib/errorhandler.js';
 
@@ -20,7 +22,10 @@ app.use('/articles', articleCommentRoute);
 
 app.use('/comments', commentRoute);
 
-app.use(errorHandler());
+app.use('/files', imgRouter);
+app.use('/files', express.static('files'));
+
+app.use(errorHandler);
 
 app.listen(port, (req, res) => {
   console.log('start app!!!');

@@ -13,4 +13,4 @@ coment_id.get(asyncHandler(c.commentOnly));
 coment_id.patch(asyncHandler(c.commentUpdate));
 coment_id.delete(asyncHandler(c.commentDelete));
 
-export default commentRoute;
+export { commentRoute };
