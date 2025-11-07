@@ -3,65 +3,81 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function articleCommentNew(req, res) {
-  const articleId = req.params.articleId;
-  const article = await prisma.article.findUnique({
-    where: { id: articleId },
-  });
+  try {
+    const articleId = req.params.articleId;
+    const article = await prisma.article.findUnique({
+      where: { id: articleId },
+    });
 
-  if (!article) return res.status(404).send({ message: 'Article not found' });
+    if (!article) return res.status(404).send({ message: 'Article not found' });
 
-  const { content } = req.body;
-  const commentCreate = await prisma.commentArticle.create({
-    data: {
-      content,
-      article: {
-        connect: { id: articleId },
+    const { content } = req.body;
+    const commentCreate = await prisma.commentArticle.create({
+      data: {
+        content,
+        article: {
+          connect: { id: articleId },
+        },
       },
-    },
-    include: {
-      article: true,
-    },
-  });
+      include: {
+        article: true,
+      },
+    });
 
-  res.status(201).send(commentCreate);
+    res.status(201).send(commentCreate);
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function articleCommentsList(req, res) {
-  const articleId = req.params.articleId;
-  const articleComments = await prisma.article.findUnique({
-    where: { id: articleId },
-    include: {
-      comments: {
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
+  try {
+    const articleId = req.params.articleId;
+    const articleComments = await prisma.article.findUnique({
+      where: { id: articleId },
+      include: {
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!articleComments)
-    return res.status(404).send({ message: 'Product not found' });
+    if (!articleComments)
+      return res.status(404).send({ message: 'Product not found' });
 
-  res.status(200).send(articleComments.comments);
+    res.status(200).send(articleComments.comments);
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function articleCommentUpdate(req, res) {
-  const commentId = req.params.commentId;
-  const commentUpdate = await prisma.commentArticle.update({
-    where: { id: commentId },
-    data: req.body,
-  });
+  try {
+    const commentId = req.params.commentId;
+    const commentUpdate = await prisma.commentArticle.update({
+      where: { id: commentId },
+      data: req.body,
+    });
 
-  res.status(201).send(commentUpdate);
+    res.status(201).send(commentUpdate);
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function articleCommentDelete(req, res) {
-  const commentId = req.params.commentId;
-  await prisma.commentArticle.delete({
-    where: { id: commentId },
-  });
+  try {
+    const commentId = req.params.commentId;
+    await prisma.commentArticle.delete({
+      where: { id: commentId },
+    });
 
-  res.status(204).send(commentId);
+    res.status(204).send(commentId);
+  } catch (err) {
+    next(err);
+  }
 }
