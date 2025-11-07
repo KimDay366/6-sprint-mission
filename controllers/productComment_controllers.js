@@ -1,72 +1,38 @@
 import { PrismaClient } from '@prisma/client';
-import { assert } from 'superstruct';
-import { CreateComment, PatchComment } from '../structs/commentStructs.js';
 
 const prisma = new PrismaClient();
 
-export async function productCommentList(req, res) {
-  const productId = req.params.productId;
-  const productComments = await prisma.product.findUnique({
-    where: { id: productId },
-    include: {
-      comments: {
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-        },
-      },
-    },
-  });
-
-  if (!productComments) {
-    throw new Error(`Cannot found ${id}`);
-  }
-
-  const productComment_list = new Array(productComments.comments);
-  res.status(200).send(productComment_list);
-}
-
-export async function productCommentOnly(req, res) {
-  // product 페이지에서 특정 댓글에 접속하는 방식을 구현하고 싶었으나
-  // 데이터를 불러오는데 한계가 있어서, 일단 prisma.comment로 작업 하였습니다
-
-  const commentId = req.params.commentId;
-  const targetComment = await prisma.comment.findUniqueOrThrow({
-    where: { id: commentId },
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-    },
-  });
-
-  if (!targetComment) {
-    throw new Error(`Cannot found ${id}`);
-  }
-
-  res.status(200).send(targetComment);
-}
-
 export async function productCommentNew(req, res) {
-  // 1. comment DB에 데이터를 우선 생성
+  // comment를 생성하면서, product id를 연결
+  // 솔직히 GPT 도움 많이 아주 많이 받았습니다 ㅠ
 
-  assert(req.body, CreateComment);
-  const commentNew = await prisma.comment.create({
-    data: req.body,
+  const productId = req.params.productId;
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
   });
 
-  // 2. comment data를 해당하는 product에 연결
-  const productId = req.params.productId;
-  const commentId = commentNew.id;
+  if (!product) return res.status(404).send({ message: 'Product not found' });
 
-  const productComment_new = await prisma.product.update({
-    where: { id: productId },
+  const { content } = req.body;
+  const commentCreate = await prisma.commentProduct.create({
     data: {
-      comments: {
-        connect: { id: commentId },
+      content,
+      product: {
+        connect: { id: productId },
       },
     },
+    include: {
+      product: true,
+    },
+  });
+
+  res.status(201).send(commentCreate);
+}
+
+export async function oneProductComment(req, res) {
+  const id = req.params.productId;
+  const productComments = await prisma.product.findUnique({
+    where: { id },
     include: {
       comments: {
         select: {
@@ -77,13 +43,16 @@ export async function productCommentNew(req, res) {
       },
     },
   });
-  res.status(201).send(productComment_new);
+
+  if (!productComments)
+    return res.status(404).send({ message: 'Product not found' });
+
+  res.status(200).send(productComments.comments);
 }
 
 export async function productCommentUpdate(req, res) {
-  assert(req.body, PatchComment);
   const commentId = req.params.commentId;
-  const commentUpdate = await prisma.comment.update({
+  const commentUpdate = await prisma.commentProduct.update({
     where: { id: commentId },
     data: req.body,
   });
@@ -93,7 +62,7 @@ export async function productCommentUpdate(req, res) {
 
 export async function productCommentDelete(req, res) {
   const commentId = req.params.commentId;
-  await prisma.comment.delete({
+  await prisma.commentProduct.delete({
     where: { id: commentId },
   });
 

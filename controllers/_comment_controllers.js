@@ -1,6 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { assert } from 'superstruct';
-import { PatchComment } from '../structs/commentStructs.js';
 
 const prisma = new PrismaClient();
 
@@ -37,7 +35,7 @@ export async function commentOnly(req, res) {
 }
 
 export async function commentUpdate(req, res) {
-  assert(req.body, PatchComment);
+  
   const id = req.params.id;
   const comment_update = await prisma.comment.update({
     where: { id },

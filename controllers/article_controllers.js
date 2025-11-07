@@ -1,8 +1,14 @@
 import { PrismaClient } from '@prisma/client';
-import { assert } from 'superstruct';
-import { CreateArticle, PatchArticle } from '../structs/articleStructs.js';
 
 const prisma = new PrismaClient();
+
+export async function articleNew(req, res) {
+  const articleCreate = await prisma.article.create({
+    data: req.body,
+  });
+
+  res.status(201).send(articleCreate);
+}
 
 export async function articlesList(req, res) {
   const {
@@ -26,7 +32,7 @@ export async function articlesList(req, res) {
       orderBy = { createdAt: 'desc' };
   }
 
-  const article_list = await prisma.article.findMany({
+  const articles = await prisma.article.findMany({
     where: {
       title: {
         contains: title,
@@ -46,19 +52,22 @@ export async function articlesList(req, res) {
     },
   });
 
-  if (!article_list) {
+  if (!articles) {
     throw new Error(`Cannot found data`);
   }
 
-  res.status(200).send(article_list);
+  res.status(200).send(articles);
 }
 
 export async function articleOnly(req, res) {
   const id = req.params.id;
   const article = await prisma.article.findUniqueOrThrow({
     where: { id },
-    include: {
-      comment: true,
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      createdAt: true,
     },
   });
 
@@ -69,24 +78,14 @@ export async function articleOnly(req, res) {
   res.status(200).send(article);
 }
 
-export async function articleNew(req, res) {
-  assert(req.body, CreateArticle);
-  const article_new = await prisma.article.create({
-    data: req.body,
-  });
-
-  res.status(201).send(article_new);
-}
-
 export async function articleUpdate(req, res) {
-  assert(req.body, PatchArticle);
   const id = req.params.id;
-  const article_update = await prisma.article.update({
+  const articleUpdate = await prisma.article.update({
     where: { id },
     data: req.body,
   });
 
-  res.status(200).send(article_update);
+  res.status(200).send(articleUpdate);
 }
 
 export async function articleDelete(req, res) {

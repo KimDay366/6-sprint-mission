@@ -1,8 +1,17 @@
 import { PrismaClient } from '@prisma/client';
-import { assert } from 'superstruct';
-import { CreateProduct, PatchProduct } from '../structs/productStructs.js';
 
 const prisma = new PrismaClient();
+
+export async function productNew(req, res) {
+  const productCreate = await prisma.product.create({
+    data: req.body,
+    include: {
+      comments: true,
+    },
+  });
+
+  res.status(201).send(productCreate);
+}
 
 export async function productsList(req, res) {
   const {
@@ -52,8 +61,13 @@ export async function productOnly(req, res) {
   const id = req.params.id;
   const product = await prisma.product.findUniqueOrThrow({
     where: { id },
-    include: {
-      comments: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      price: true,
+      tags: true,
+      createdAt: true,
     },
   });
 
@@ -64,27 +78,14 @@ export async function productOnly(req, res) {
   res.status(200).send(product);
 }
 
-export async function productNew(req, res) {
-  assert(req.body, CreateProduct);
-  const product_new = await prisma.product.create({
-    data: req.body,
-    include: {
-      comments: true,
-    },
-  });
-
-  res.status(201).send(product_new);
-}
-
 export async function productUpdate(req, res) {
-  assert(req.body, PatchProduct);
   const id = req.params.id;
-  const product_update = await prisma.product.update({
+  const productUpdate = await prisma.product.update({
     where: { id },
     data: req.body,
   });
 
-  res.status(200).send(product_update);
+  res.status(200).send(productUpdate);
 }
 
 export async function productDelete(req, res) {

@@ -1,7 +1,7 @@
 import express from 'express';
 import { productRoute, productCommentRoute } from './routers/productRoute.js';
 import { articleRoute, articleCommentRoute } from './routers/articleRoute.js';
-import { commentRoute } from './routers/commentRoute.js';
+import { commentRoute } from './routers/_commentRoute.js';
 import { imgRouter } from './routers/imgRoute.js';
 
 import cors from 'cors';
@@ -20,7 +20,8 @@ app.use('/products', productCommentRoute);
 app.use('/articles', articleRoute);
 app.use('/articles', articleCommentRoute);
 
-app.use('/comments', commentRoute);
+// comment CRUD 작업은 product, article에서 직접 작업 진행
+// app.use('/comments', commentRoute);
 
 app.use('/files', imgRouter);
 app.use('/files', express.static('files'));
