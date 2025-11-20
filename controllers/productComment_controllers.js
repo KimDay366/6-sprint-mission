@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prismaclient.js';
 
 export async function productCommentNew(req, res, next) {
   // comment를 생성하면서, product id를 연결
