@@ -7,7 +7,11 @@
 
 // 문제 1) 선택 정렬 : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
 
+console.log("=-.-=-.-=-.-=-.-= 선택 정렬 =-.-=-.-=-.-=-.-=");
+
 function selectionSort(arr) {
+  console.log(`최초 배열 : ${arr}`);
+
   for (let i = 0; i < arr.length; i++) {
     // 전체 최솟값을 찾으려면 루프를 꼭 돌아야 함
     // 따라서 최초에는 0번째 인덱스를 기준점으로 삼고 시작
@@ -30,6 +34,8 @@ function selectionSort(arr) {
       [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
     }
 
+    console.log(`${i + 1}번쨰 정렬 : ${arr}`);
+
     // 배열 : [5, 3, 1, 2, 4]
     // 1회전 (i=0): 처음 인덱스 0의 값 "5", 루프 후 변경된 인덱스 2의 값 "1" 찾음 -> "5"와 "1" 교환 -> [1, 3, 5, 2, 4]
     // 2회전 (i=1): 처음 인덱스 1의 값 "3", 루프 후 변경된 인덱스 3의 값 "2" 찾음 -> "3"과 "2" 교환 -> [1, 2, 5, 3, 4] ...
@@ -39,6 +45,7 @@ function selectionSort(arr) {
 const nums1 = [5, 3, 1, 2, 4];
 selectionSort(nums1);
 console.log(`선택 정렬 결과 : ${nums1}`);
+console.log("");
 
 // =========================================
 
@@ -52,7 +59,10 @@ console.log(`선택 정렬 결과 : ${nums1}`);
 
 // 문제 2) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
 
+console.log("=-.-=-.-=-.-=-.-= 삽입 정렬 =-.-=-.-=-.-=-.-=");
 function insertionSort(arr) {
+  console.log(`최초 배열 : ${arr}`);
+
   for (let i = 1; i < arr.length; i++) {
     let targetVal = arr[i]; // 현재 정렬할 타겟 값
     let j = i - 1;
@@ -83,6 +93,7 @@ function insertionSort(arr) {
 
     arr[j + 1] = targetVal;
     console.log(`순회 후 배열 : ${arr}`);
+    console.log("");
   }
 }
 
