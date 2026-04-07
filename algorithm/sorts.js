@@ -7,6 +7,26 @@
 
 // 문제 1) 선택 정렬 : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
 
+function selectionSort(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    let minVal = arr[i];
+    let minIndex = i;
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[j] < minVal) {
+        minVal = arr[j];
+        minIndex = j;
+      }
+    }
+    if (minIndex !== i) {
+      [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+    }
+  }
+}
+
+const nums1 = [5, 3, 1, 2, 4];
+selectionSort(nums1);
+console.log(`선택 정렬 결과 : ${nums1}`);
+
 // =========================================
 
 // 삽입 정렬 (Insertion sort)
@@ -18,6 +38,44 @@
 //   4. ... 이 과정을 반복하여 최종적으로 [1,2,3,4,5]가 되면 정지
 
 // 문제 2) : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
+
+function insertionSort(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    let targetVal = arr[i]; // 현재 정렬할 타겟 값
+    let j = i - 1;
+    // i : 현재 인덱스 , j : 비교할 인덱스
+
+    // 비교 대상 인덱스가 0 이상이고(-1 = 비교대상 없음 , while문 종료 조건)
+    // 현재 타겟값이 비교대상 인덱스의 값보다 작으면 실행
+    while (j >= 0 && arr[j] > targetVal) {
+      console.log(`현재 요소 : ${targetVal}, 앞 요소 : ${arr[j]}`);
+
+      // 현재 인덱스에 비교대상 값을 넣어줌 (오른쪽으로 한 칸 이동)
+      arr[j + 1] = arr[j];
+
+      console.log(`현재 배열 : ${arr}`);
+
+      // 비교 인덱스를 감소 시켜서 다음 비교를 준비
+      j--;
+    }
+
+    // 만약 현재 인덱스와 비교 대상 인덱스 비교 했을 때 동일하거나, 더 크면 while문이 종료 되고,
+    // 멈춘 자리의 다음 인덱스에 현재 타겟 값을 넣어주는 것
+    // 배열 : 1,3,5,2,4 -> i = 3, j = 2, "2" 타겟
+    // 현재 요소 : 2, 앞 요소 : 5
+    // 현재 배열 : 1,3,5,5,4 -> 2 vs 5 해서 5가 더 크므로 j+1 = 3번째 인덱스에 5를 넣어줌, j-- = 1
+    // 현재 요소 : 2, 앞 요소 : 3
+    // 현재 배열 : 1,3,3,5,4 -> 2 vs 3 해서 3이 더 크므로 j+1 = 2번째 인덱스에 3를 넣어줌, j-- = 0
+    // 순회 후 배열 : 1,2,3,5,4 -> 2 vs 1 해서 1이 더 크므로 while문 종료, 멈춘 자리 인덱스 j = 0 의 다음 인덱스 1에 2를 넣어줌
+
+    arr[j + 1] = targetVal;
+    console.log(`순회 후 배열 : ${arr}`);
+  }
+}
+
+const nums2 = [5, 3, 1, 2, 4];
+insertionSort(nums2);
+console.log(`삽입 정렬 결과 : ${nums2}`);
 
 // =========================================
 
