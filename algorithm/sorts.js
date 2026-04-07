@@ -12,6 +12,10 @@ console.log("=-.-=-.-=-.-=-.-= 선택 정렬 =-.-=-.-=-.-=-.-=");
 function selectionSort(arr) {
   console.log(`최초 배열 : ${arr}`);
 
+  if (arr.length <= 1) {
+    return arr;
+  }
+
   for (let i = 0; i < arr.length; i++) {
     // 전체 최솟값을 찾으려면 루프를 꼭 돌아야 함
     // 따라서 최초에는 0번째 인덱스를 기준점으로 삼고 시작
@@ -45,7 +49,7 @@ function selectionSort(arr) {
 const nums1 = [5, 3, 1, 2, 4];
 selectionSort(nums1);
 console.log(`선택 정렬 결과 : ${nums1}`);
-console.log("");
+console.log(""); // 가독성을 위한 공백
 
 // =========================================
 
@@ -62,6 +66,10 @@ console.log("");
 console.log("=-.-=-.-=-.-=-.-= 삽입 정렬 =-.-=-.-=-.-=-.-=");
 function insertionSort(arr) {
   console.log(`최초 배열 : ${arr}`);
+
+  if (arr.length <= 1) {
+    return arr;
+  }
 
   for (let i = 1; i < arr.length; i++) {
     let targetVal = arr[i]; // 현재 정렬할 타겟 값
@@ -93,13 +101,14 @@ function insertionSort(arr) {
 
     arr[j + 1] = targetVal;
     console.log(`순회 후 배열 : ${arr}`);
-    console.log("");
+    console.log(""); // 가독성을 위한 공백
   }
 }
 
 const nums2 = [5, 3, 1, 2, 4];
 insertionSort(nums2);
 console.log(`삽입 정렬 결과 : ${nums2}`);
+console.log(""); // 가독성을 위한 공백
 
 // =========================================
 
