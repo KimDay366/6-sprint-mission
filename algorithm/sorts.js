@@ -190,3 +190,48 @@ console.log(""); // 가독성을 위한 공백
 //   8. ... 이런 방식을 반복하여 최종적으로 [1,2,3,4,5,6,7,8,9]가 되면 정지
 
 // 문제 4) 퀵 정렬 : 숫자형 배열을 파라미터로 받고, 해당 배열을 수정하도록 구현합니다.
+
+console.log("=-.-=-.-=-.-=-.-= 퀵 정렬 =-.-=-.-=-.-.-.-=");
+
+function quickSort(arr, left = 0, right = arr.length - 1) {
+  // 재귀 함수에서는 현재 내가 작업해야 할 **범위(State)**를 반드시 매개변수로 넘겨받고 활용해야 하므로,
+  // 다른 함수와 다르게 left와 right를 매개변수로 받는다.
+
+  if (left >= right) {
+    return;
+  }
+
+  // partition()을 통해 좌우를 나눔
+  // - 피벗보다 작은 값은 왼쪽, 큰 값은 오른쪽으로 배치
+  const pivotIndex = partition(arr, left, right);
+
+  // 피벗을 제외한 왼쪽과 오른쪽 부분을 재귀함수로 정렬
+  quickSort(arr, left, pivotIndex - 1);
+  quickSort(arr, pivotIndex + 1, right);
+}
+
+// 분할(Partition)을 담당하는 헬퍼 함수
+function partition(arr, left, right) {
+  // 간단하게 가장 오른쪽 요소를 피벗으로 선택
+  const pivot = arr[right];
+  let i = left; // 피벗보다 작은 값이 들어갈 위치 인덱스
+
+  for (let j = left; j < right; j++) {
+    if (arr[j] < pivot) {
+      // 피벗보다 현재 요소가 작다면 i번째 요소와 교환
+      console.log(`현재 요소 : ${arr[j]}, 정렬 대상 : ${arr[i]}, 피벗 요소 : ${pivot}`);
+      
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      i++;
+      console.log(`현재 배열 : ${arr}`);
+    }
+  }
+
+  // 마지막으로 피벗을 자신의 위치(i)로 이동
+  [arr[i], arr[right]] = [arr[right], arr[i]];
+  return i; // 피벗의 최종 위치 반환
+}
+
+const nums4 = [5, 8, 3, 2, 7, 1, 4, 9, 6];
+quickSort(nums4);
+console.log(`퀵 정렬 결과 : ${nums4}`);
