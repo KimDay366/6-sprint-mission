@@ -123,6 +123,57 @@ console.log(""); // 가독성을 위한 공백
 
 // 문제 3) 병합 정렬 : 숫자형 배열을 파라미터로 받고, 정렬된 새로운 배열을 리턴하도록 구현합니다.
 
+console.log("=-.-=-.-=-.-=-.-= 병합 정렬 =-.-=-.-=-.-=-.-=");
+
+function mergeSort(arr) {
+  console.log(`최초 배열 : ${arr}`);
+
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  // 배열을 분할
+  const mid = Math.floor(arr.length / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+
+  // 각 부분을 재귀적으로 정렬
+  const sortedLeft = mergeSort(left); // 왼쪽 배열이 1개가 될 때까지 반복 => 예) [1,8,5,3] -> [1,8] | [5,3] -> [1]| [8] | [5]| [3]
+  const sortedRight = mergeSort(right); // 오른쪽 배열이 1개가 될 때까지 반복
+
+  console.log(`정렬된 왼쪽 배열 : ${sortedLeft}`);
+  console.log(`정렬된 오른쪽 배열 : ${sortedRight}`);
+
+  // 정렬된 두 배열을 합침
+  return merge(sortedLeft, sortedRight);
+}
+
+// 병합(Merge)을 담당하는 헬퍼 함수
+function merge(left, right) {
+  const result = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+
+  // 두 배열의 요소를 비교하며 작은 순서대로 result에 담음
+  while (leftIndex < left.length && rightIndex < right.length) {
+    if (left[leftIndex] < right[rightIndex]) {
+      result.push(left[leftIndex]);
+      leftIndex++;
+    } else {
+      result.push(right[rightIndex]);
+      rightIndex++;
+    }
+  }
+
+  // 남은 요소가 있다면 (한쪽 배열이 먼저 끝난 경우) 나머지를 모두 붙여줌
+  return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+}
+
+const nums3 = [5, 8, 3, 2, 7, 1, 4, 9, 6];
+const result3 = mergeSort(nums3);
+console.log(`병합 정렬 결과 : ${result3}`);
+console.log(""); // 가독성을 위한 공백
+
 // =========================================
 
 // 퀵 정렬 (Quick sort)
