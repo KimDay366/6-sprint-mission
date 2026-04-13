@@ -9,7 +9,7 @@
 
 1. 다음 자료 구조를 구현해 algorithm 폴더에 저장해 주세요
 
-[ ] 링크드 리스트 (Linked List)
+[x] 링크드 리스트 (Linked List)
 
 - 파일 이름: LinkedList.js
 - 클래스 이름: LinkedList
@@ -20,7 +20,8 @@
   - removeAfter(targetValue): 특정 값을 가진 노드 뒤의 노드를 삭제
 
 <br>
-[ ] 이중 링크드 리스트 (Doubly Linked List)
+
+[x] 이중 링크드 리스트 (Doubly Linked List)
 
 - 파일 이름: DoublyLinkedList.js
 - 클래스 이름: DoublyLinkedList
@@ -32,6 +33,7 @@
   - removeNode(value): 특정 값을 가진 노드 삭제
 
 <br>
+
 [ ] 큐 (Queue)
 
 - 파일 이름: Queue.js
@@ -43,6 +45,7 @@
   - isEmpty(): 큐가 비어 있는지 불린형으로 리턴
 
 <br>
+
 [ ] 스택 (Stack)
 
 - 파일 이름: Stack.js
@@ -54,6 +57,7 @@
   - isEmpty(): 스택이 비어 있는지 불린형으로 리턴
 
 <br>
+
 [ ] 이진 탐색 트리 (Binary Search Tree)
 
 - 파일 이름: BinarySearchTree.js
@@ -64,6 +68,7 @@
   - remove(value): 트리에서 해당 값을 삭제
 
 <br>
+
 2. 다음 알고리즘을 JavaScript로 구현해 algorithm/sorts.js 파일에 추가로 작성해 주세요.
 
 [ ] 힙 정렬
