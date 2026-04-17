@@ -58,7 +58,7 @@
 
 <br>
 
-[ ] 이진 탐색 트리 (Binary Search Tree)
+[x] 이진 탐색 트리 (Binary Search Tree)
 
 - 파일 이름: BinarySearchTree.js
 - 클래스 이름: BinarySearchTree
@@ -71,11 +71,11 @@
 
 2. 다음 알고리즘을 JavaScript로 구현해 algorithm/sorts.js 파일에 추가로 작성해 주세요.
 
-[ ] 힙 정렬
+[x] 힙 정렬
 
 - 함수 이름: heapsort()
 - 숫자형 배열을 받아서 받은 배열을 정렬된 상태로 수정
 
 ## 멘토에게
 
-- 작업 중 입니다
+- 전체적인 이론은 이해 했으나, 아직 구현은 미숙한 것 같습니다.
