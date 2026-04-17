@@ -34,7 +34,7 @@
 
 <br>
 
-[ ] 큐 (Queue)
+[x] 큐 (Queue)
 
 - 파일 이름: Queue.js
 - 클래스 이름: Queue
@@ -46,7 +46,7 @@
 
 <br>
 
-[ ] 스택 (Stack)
+[x] 스택 (Stack)
 
 - 파일 이름: Stack.js
 - 클래스 이름: Stack
